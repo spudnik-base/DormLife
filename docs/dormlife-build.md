@@ -346,13 +346,49 @@ Add to index.html:
 
 ---
 
-## Phase 5 — Google Drive Photo Upload (the addition)
+## Phase 5 — Google Drive Photo Upload (deferred to v2)
 
-This extends the existing Apps Script to also accept photos and save them to Drive.
+> **Status: deferred.** v1 ships with Sheets-only sync. The Drive scope required by `DriveApp` (`See, edit, create, and delete all of your Google Drive files`) is broader than we want to grant for a small school deployment. Column I (`Photo URL`) is kept empty in the sheet so this can be turned on later without a schema change.
+>
+> **v1 Apps Script** (paste this into `Code.gs`, save, deploy as Web app → Execute as **Me** → Access **Anyone**):
+>
+> ```javascript
+> function doPost(e) {
+>   try {
+>     const d = JSON.parse(e.postData.contents);
+>     const sheet = SpreadsheetApp
+>       .getActiveSpreadsheet()
+>       .getActiveSheet();
+>
+>     sheet.appendRow([
+>       new Date().toLocaleString(),  // A Timestamp
+>       d.dorm    || "",              // B Dorm
+>       d.student || "",              // C Student
+>       d.module  || "",              // D Module
+>       d.action  || "",              // E Action
+>       d.score   || "",              // F Score
+>       d.xp      || 0,               // G XP
+>       d.note    || "",              // H Note
+>       ""                            // I Photo URL (reserved for v2)
+>     ]);
+>
+>     return ContentService
+>       .createTextOutput(JSON.stringify({ ok: true }))
+>       .setMimeType(ContentService.MimeType.JSON);
+>
+>   } catch (err) {
+>     return ContentService
+>       .createTextOutput(JSON.stringify({ error: err.toString() }))
+>       .setMimeType(ContentService.MimeType.JSON);
+>   }
+> }
+> ```
+>
+> The OAuth consent screen will only ask for Google Sheets access with this version. The rest of Phase 5 below describes the v2 photo flow and is parked until the team is ready to approve the Drive scope.
 
-### 5.1 Update the Apps Script
+### 5.1 Update the Apps Script (v2)
 
-Open your existing Apps Script and replace `doPost` with this:
+When enabling photos later, replace `doPost` with this:
 
 ```javascript
 function doPost(e) {
@@ -411,7 +447,7 @@ function getOrCreateFolder(name) {
 
 After pasting, click **Deploy → Manage Deployments → Edit → New Version → Deploy**. The URL stays the same.
 
-### 5.2 Update useSheets.js to send the photo
+### 5.2 Update useSheets.js to send the photo (v2)
 
 **Claude Code prompt:**
 
@@ -429,7 +465,7 @@ Add a syncWithPhoto(payload, photoFile) function that:
 Keep the existing sync() function unchanged for non-photo actions.
 ```
 
-### 5.3 Update CheckInTab.jsx to use it
+### 5.3 Update CheckInTab.jsx to use it (v2)
 
 **Claude Code prompt:**
 
