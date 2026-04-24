@@ -9,3 +9,4 @@ export { default as ChoresView } from "./ChoresView.jsx";
 export { default as BadgesView } from "./BadgesView.jsx";
 export { default as ModuleDetail } from "./ModuleDetail.jsx";
 export { default as SetupScreen } from "./SetupScreen.jsx";
+export { default as TeacherView } from "./TeacherView.jsx";
