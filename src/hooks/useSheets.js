@@ -19,8 +19,14 @@ export function useSheets({ sheetsUrl, studentName, dorm }) {
   };
 
   const sync = useCallback(async ({ progress, xp }) => {
-    if (!sheetsUrl) return;
-    if (!studentName || !dorm) return;
+    if (!sheetsUrl) {
+      console.warn("[dormlife] sync skipped — no sheetsUrl. VITE_SHEETS_URL env var not baked into build?");
+      return;
+    }
+    if (!studentName || !dorm) {
+      console.warn("[dormlife] sync skipped — missing studentName or dorm", { studentName, dorm });
+      return;
+    }
 
     setSyncStatus("syncing");
 
@@ -31,15 +37,20 @@ export function useSheets({ sheetsUrl, studentName, dorm }) {
       ...Object.fromEntries(MODULES.map((m) => [m.id, deriveLevel(progress, m.id)])),
     };
 
+    console.log("[dormlife] POST →", sheetsUrl, payload);
+
     try {
-      await fetch(sheetsUrl, {
+      const res = await fetch(sheetsUrl, {
         method: "POST",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify(payload),
       });
+      const body = await res.text().catch(() => "(unreadable)");
+      console.log("[dormlife] ← HTTP", res.status, res.statusText, body.slice(0, 200));
       setSyncStatus("ok");
       resetStatusAfter(2500);
-    } catch {
+    } catch (err) {
+      console.error("[dormlife] fetch threw:", err);
       setSyncStatus("offline");
       resetStatusAfter(3000);
     }

@@ -12,6 +12,10 @@ import {
   SetupScreen,
   TeacherView,
 } from "./components";
+import DebugPanel from "./components/DebugPanel.jsx";
+
+const DEBUG = typeof window !== "undefined"
+  && new URLSearchParams(window.location.search).get("debug") === "1";
 
 export default function App() {
   const progressApi = useProgress();
@@ -37,6 +41,7 @@ export default function App() {
           initialSheetsUrl={progressApi.sheetsUrl}
           onSubmit={(name, dorm, url) => progressApi.setupUser(name, dorm, url)}
         />
+        {DEBUG && <DebugPanel progressApi={progressApi} sheetsApi={sheetsApi} />}
       </div>
     );
   }
@@ -142,6 +147,7 @@ export default function App() {
           {mode === "student" && <BottomNav tab={tab} onChange={setTab} />}
         </>
       )}
+      {DEBUG && <DebugPanel progressApi={progressApi} sheetsApi={sheetsApi} />}
     </div>
   );
 }
