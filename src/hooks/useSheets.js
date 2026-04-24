@@ -40,13 +40,17 @@ export function useSheets({ sheetsUrl, studentName, dorm }) {
     console.log("[dormlife] POST →", sheetsUrl, payload);
 
     try {
-      const res = await fetch(sheetsUrl, {
+      // no-cors required: Apps Script /a/macros/<domain>/ URLs 302 redirect to
+      // script.googleusercontent.com, and the browser blocks cross-origin reads
+      // through that redirect. Opaque response — request still reaches the
+      // script and the sheet gets written.
+      await fetch(sheetsUrl, {
         method: "POST",
+        mode: "no-cors",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify(payload),
       });
-      const body = await res.text().catch(() => "(unreadable)");
-      console.log("[dormlife] ← HTTP", res.status, res.statusText, body.slice(0, 200));
+      console.log("[dormlife] ← fetch completed (opaque response, no-cors)");
       setSyncStatus("ok");
       resetStatusAfter(2500);
     } catch (err) {
