@@ -17,6 +17,72 @@ A complete walkthrough for taking the prototype into a production PWA, pushed to
 
 ---
 
+## Design System
+
+Bright, paper-feel light theme. Five pastels plus a soft peach as per-module accents, on a warm off-white canvas with soft charcoal text.
+
+### Colour tokens
+
+Add to `src/styles/globals.css` as CSS custom properties:
+
+```css
+:root {
+  --butter: #F5EDB0;
+  --rose:   #EDB9BE;
+  --lilac:  #C7B4DB;
+  --peri:   #B5C4E6;
+  --mint:   #BCDCC2;
+  --peach:  #F3CDB3;
+
+  --bg:     #FFFBF4;   /* warm off-white canvas */
+  --ink:    #2B2B3C;   /* soft charcoal text */
+  --muted:  #8B8B9E;
+  --accent: #7A6BD1;   /* deeper lilac for CTAs / focus */
+}
+```
+
+### Module → colour mapping
+
+Add a `color` field to each module in `src/data/modules.js`:
+
+| Module index | Token |
+|---|---|
+| 0 | `--butter` |
+| 1 | `--rose` |
+| 2 | `--lilac` |
+| 3 | `--peri` |
+| 4 | `--mint` |
+| 5 | `--peach` |
+
+### Tone guidance
+
+- Cards use their module colour at ~30% opacity as a tint, full-strength as an accent bar or icon pill.
+- Primary CTAs: `--accent` on `--bg`; hover lifts with a subtle shadow, not a colour change.
+- Text is always `--ink` on any pastel — contrast is sufficient at these saturations.
+- Success / XP gain use `--mint`; warm errors use `--rose`.
+- Keep generous corner radii (16–24px) and airy padding for the "inviting" feel.
+
+---
+
+## Dorms
+
+`Dorm` is a fixed dropdown on setup, not free-text. Options:
+
+```js
+export const DORMS = [
+  "Beau Site",
+  "Savoy",
+  "Beau Reveil",
+  "Esplanade",
+  "BEC girls",
+  "BEC boys",
+];
+```
+
+Store this in `src/data/dorms.js`. `SetupScreen` renders it as a `<select>` (or custom chip grid) and the chosen dorm is persisted in localStorage alongside the student name, and included in every sync payload to the sheet (column B).
+
+---
+
 ## Prerequisites
 
 Make sure you have these before starting:
@@ -137,12 +203,12 @@ Create src/hooks/useProgress.js. Extract all progress/XP state from
 DormApp.prototype.jsx into a custom hook called useProgress(). 
 
 It should expose:
-- progress, xp, studentName, sheetsUrl
+- progress, xp, studentName, dorm, sheetsUrl
 - getLevel(moduleId) — returns 0/1/2/3
 - markLearn(module)
 - markQuizPassed(module, score)
 - markChoreDone(module, note)
-- setupUser(name, url)
+- setupUser(name, dorm, url)
 - totalDone, levelNum, xpPct
 
 Use localStorage for persistence (key: "dorm-v4"). 
@@ -155,10 +221,10 @@ Handle JSON parse errors gracefully.
 
 ```
 Create src/hooks/useSheets.js. Extract the Google Sheets sync logic 
-from DormApp.prototype.jsx into a hook called useSheets(sheetsUrl, studentName).
+from DormApp.prototype.jsx into a hook called useSheets(sheetsUrl, studentName, dorm).
 
 It should expose:
-- sync(payload) — POST to sheetsUrl with student name + payload
+- sync(payload) — POST to sheetsUrl with { student, dorm, ...payload }
 - syncStatus — null | "syncing" | "ok" | "err"
 
 Use mode: "no-cors" on the fetch. Auto-clear syncStatus after 3 seconds.
@@ -184,6 +250,29 @@ Keep all existing CSS class names exactly as they are in the prototype.
 ```
 
 Repeat for: `LearnTab`, `CheckInTab`, `ModuleDetail`, `ModuleCard`, `BottomNav`, `BadgesView`, `ChoresView`, `TeacherView`, `SetupScreen`, `ScriptModal`.
+
+**SetupScreen specifics:**
+
+```
+Create src/components/SetupScreen.jsx.
+
+Collect three things before the student can use the app:
+1. Student name — text input, required
+2. Dorm — <select> populated from DORMS in src/data/dorms.js, required
+3. Sheets URL — text input, optional (can be pre-filled from VITE_SHEETS_URL)
+
+On submit, call setupUser(name, dorm, url) from useProgress.
+Disable submit until name and dorm are both set.
+Style with the pastel palette — each dorm option gets a subtle pastel background chip.
+```
+
+**TeacherView specifics:**
+
+```
+TeacherView groups students by dorm. Show one collapsible section per dorm
+(from DORMS), with the dorm name as a pill in that dorm's pastel, and the
+students inside. Include a "filter by dorm" dropdown at the top.
+```
 
 ### 3.6 Wire up App.jsx
 
@@ -229,8 +318,8 @@ Update vite.config.js to add vite-plugin-pwa with this config:
 App name: "dormlife."
 Short name: "dormlife"
 Description: "Dorm life skills tracker"
-Theme color: "#07070f"
-Background color: "#07070f"
+Theme color: "#FFFBF4"
+Background color: "#FFFBF4"
 Display: standalone
 Start URL: /
 Icons: 192 and 512 versions from public/icons/
@@ -247,9 +336,9 @@ Also add a registerSW import in src/main.jsx.
 
 ```
 Add to index.html:
-- <meta name="theme-color" content="#07070f">
+- <meta name="theme-color" content="#FFFBF4">
 - <meta name="apple-mobile-web-app-capable" content="yes">
-- <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+- <meta name="apple-mobile-web-app-status-bar-style" content="default">
 - <meta name="apple-mobile-web-app-title" content="dormlife.">
 - <link rel="apple-touch-icon" href="/icons/icon-192.png">
 - viewport meta: width=device-width, initial-scale=1, viewport-fit=cover
@@ -292,14 +381,15 @@ function doPost(e) {
     }
 
     sheet.appendRow([
-      new Date().toLocaleString(),
-      d.student,
-      d.module,
-      d.action,
-      d.score || "",
-      d.xp || 0,
-      d.note || "",
-      photoUrl       // ← new column: links to photo in Drive
+      new Date().toLocaleString(),  // A Timestamp
+      d.dorm    || "",              // B Dorm
+      d.student || "",              // C Student
+      d.module  || "",              // D Module
+      d.action  || "",              // E Action
+      d.score   || "",              // F Score
+      d.xp      || 0,               // G XP
+      d.note    || "",              // H Note
+      photoUrl                      // I Photo URL
     ]);
 
     return ContentService
@@ -477,9 +567,9 @@ vercel --prod        # force production deployment
 
 Once the Apps Script is live, your Google Sheet will have these columns:
 
-| A | B | C | D | E | F | G | H |
-|---|---|---|---|---|---|---|---|
-| Timestamp | Student | Module | Action | Score | XP | Note | Photo URL |
+| A | B | C | D | E | F | G | H | I |
+|---|---|---|---|---|---|---|---|---|
+| Timestamp | Dorm | Student | Module | Action | Score | XP | Note | Photo URL |
 
 You can add a summary tab with `=COUNTIF` formulas to build a simple class dashboard directly in Sheets — no extra tooling needed.
 
