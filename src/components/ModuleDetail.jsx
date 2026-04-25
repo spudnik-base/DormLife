@@ -22,6 +22,7 @@ export default function ModuleDetail({
   learned,
   quizPassed,
   choreDone,
+  savedReflection = "",
   initialTab = "learn",
   onBack,
   onMarkLearn,
@@ -97,7 +98,12 @@ export default function ModuleDetail({
           <QuizTab module={module} quizPassed={quizPassed} onPass={onPass} />
         )}
         {tab === "checkin" && (
-          <CheckInTab module={module} done={choreDone} onMarkDone={onMarkDone} />
+          <CheckInTab
+            module={module}
+            done={choreDone}
+            savedReflection={savedReflection}
+            onMarkDone={onMarkDone}
+          />
         )}
       </div>
     </div>

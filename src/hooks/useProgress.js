@@ -70,9 +70,9 @@ export function useProgress() {
     return { progress: nextProgress, xp: nextXp };
   }, [progress, xp, studentName, dorm, sheetsUrl]);
 
-  const markChoreDone = useCallback((id, note = "") => {
+  const markChoreDone = useCallback((id, reflection = "") => {
     if (progress[id]?.chore) return null;
-    const nextProgress = { ...progress, [id]: { ...(progress[id] || {}), chore: true, note } };
+    const nextProgress = { ...progress, [id]: { ...(progress[id] || {}), chore: true, reflection } };
     const nextXp = xp + XP_CHORE;
     setProgress(nextProgress);
     setXp(nextXp);

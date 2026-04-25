@@ -417,6 +417,44 @@ body {
   line-height: 1.55;
 }
 
+.ci-reflect {
+  background: color-mix(in srgb, var(--lilac) 22%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--lilac) 60%, transparent);
+  border-radius: 13px;
+  padding: 13px 14px;
+  margin-bottom: 13px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.ci-reflect-label {
+  font-size: 12px; font-weight: 700;
+  color: var(--ink);
+}
+.ci-reflect-input {
+  background: #FFFFFF;
+  border: 1.5px solid var(--ink-soft);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13px; color: var(--ink);
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.ci-reflect-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.ci-reflect-saved {
+  background: #FFFFFF;
+  border: 1.5px solid var(--ink-soft);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13px; color: var(--ink);
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 /* ── chores list ───────────────────────────────────────────── */
 .ch-list { padding: 0 16px; display: flex; flex-direction: column; gap: 9px; }
 .ch-row {

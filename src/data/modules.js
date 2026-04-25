@@ -25,6 +25,7 @@ export const MODULES = [
       { q: "Why shouldn't you leave dishes 'to soak overnight'?", opts: ["No reason", "Standing water grows bacteria + smells", "Wastes water", "It's against dorm rules"], a: 1 },
     ],
     choreNote: "Wash all dishes, wipe the rack, clean the sink",
+    reflectPrompt: "One habit from this you'll keep doing?",
     badge: "Dish Master",
   },
   {
@@ -53,6 +54,7 @@ export const MODULES = [
       { q: "How often should you clean the dryer lint trap?", opts: ["Once a year", "After every load", "Never", "Only when full"], a: 1 },
     ],
     choreNote: "Run a full load, transfer to dryer, fold and put away",
+    reflectPrompt: "Anything you'd do differently next time?",
     badge: "Fresh & Clean",
   },
   {
@@ -81,6 +83,7 @@ export const MODULES = [
       { q: "When is a bin too full to tie?", opts: ["Three-quarters full is ideal", "Completely overflowing", "Empty", "Half full"], a: 1 },
     ],
     choreNote: "Empty all bins, replace bags, sort recycling correctly",
+    reflectPrompt: "Spot anything that should've been recycled?",
     badge: "Trash Hero",
   },
   {
@@ -109,6 +112,7 @@ export const MODULES = [
       { q: "Pile of clean clothes on a chair = ?", opts: ["Productive", "Sign of stalled organisation", "Required by feng shui", "Always fine"], a: 1 },
     ],
     choreNote: "Clear all surfaces, put items in their places, vacuum floor",
+    reflectPrompt: "What spot still needs attention?",
     badge: "Space Zen Master",
   },
   {
@@ -137,6 +141,7 @@ export const MODULES = [
       { q: "How long can leftovers safely sit out?", opts: ["8 hours", "2 hours max", "Overnight", "Until they smell"], a: 1 },
     ],
     choreNote: "Wipe counters and stovetop, clear and clean sink, check fridge",
+    reflectPrompt: "Riskiest thing you saw — and how you'd fix it?",
     badge: "Kitchen Pro",
   },
   {
@@ -165,6 +170,7 @@ export const MODULES = [
       { q: "Friends visiting your dorm — your responsibility?", opts: ["No, they're guests", "Yes — for their behaviour and impact", "Only if RA notices", "Only if they break stuff"], a: 1 },
     ],
     choreNote: "Tidy the common area, check the notice board, say hi to someone",
+    reflectPrompt: "Who in the dorm did you connect with today?",
     badge: "Community Star",
   },
 ];
