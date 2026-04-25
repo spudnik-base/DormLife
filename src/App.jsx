@@ -13,6 +13,7 @@ import {
   TeacherView,
 } from "./components";
 import DebugPanel from "./components/DebugPanel.jsx";
+import SettingsMenu from "./components/SettingsMenu.jsx";
 
 const DEBUG = typeof window !== "undefined"
   && new URLSearchParams(window.location.search).get("debug") === "1";
@@ -81,6 +82,17 @@ export default function App() {
     setPinged((p) => ({ ...p, [studentId]: true }));
   };
 
+  const handleSyncNow = () => {
+    sheetsApi.sync({ progress: progressApi.progress, xp: progressApi.xp });
+  };
+
+  const handleSignOut = () => {
+    progressApi.resetUser();
+    setActiveModule(null);
+    setTab("home");
+    setMode("student");
+  };
+
   const activeLevel = activeModule ? progressApi.getLevel(activeModule.id) : 0;
 
   return (
@@ -95,6 +107,12 @@ export default function App() {
         >
           {mode === "teacher" ? "Student" : "RA View"}
         </div>
+        <SettingsMenu
+          studentName={progressApi.studentName}
+          dorm={progressApi.dorm}
+          onSyncNow={handleSyncNow}
+          onSignOut={handleSignOut}
+        />
       </div>
 
       {activeModule ? (
