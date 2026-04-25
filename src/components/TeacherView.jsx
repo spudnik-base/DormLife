@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { MODULES } from "../data/modules";
 import { DORMS } from "../data/dorms";
+import { ModuleIcon } from "../icons";
 
 const LEVEL_BG = [
   "var(--ink-softer)",
@@ -102,7 +103,7 @@ export default function TeacherView({ students, pinged, onPing }) {
                       style={{ background: LEVEL_BG[lv] }}
                       title={`${m.title}: ${LEVEL_LETTER[lv] || "—"}`}
                     >
-                      {m.emoji}
+                      <ModuleIcon id={m.id} color={m.color} size={20} />
                       {lv > 0 && (
                         <div
                           className="sm-lv"
