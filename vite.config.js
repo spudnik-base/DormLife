@@ -68,6 +68,23 @@ export default defineConfig({
               cacheableResponse: { statuses: [0, 200] },
             },
           },
+          {
+            // Apps Script sync: NetworkOnly + background sync queue.
+            // Failed POSTs (offline) get held in IndexedDB and replayed
+            // on the next online event, so a chore done on the train
+            // still reaches the sheet once the student reconnects.
+            urlPattern: /^https:\/\/script\.google\.com\/macros\//,
+            method: "POST",
+            handler: "NetworkOnly",
+            options: {
+              backgroundSync: {
+                name: "dormlife-sync-queue",
+                options: {
+                  maxRetentionTime: 24 * 60,
+                },
+              },
+            },
+          },
         ],
       },
     }),
