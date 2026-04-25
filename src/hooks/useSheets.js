@@ -35,6 +35,9 @@ export function useSheets({ sheetsUrl, studentName, dorm }) {
       dorm,
       xp,
       ...Object.fromEntries(MODULES.map((m) => [m.id, deriveLevel(progress, m.id)])),
+      reflections: Object.fromEntries(
+        MODULES.map((m) => [m.id, progress[m.id]?.reflection || ""])
+      ),
     };
 
     console.log("[dormlife] POST →", sheetsUrl, payload);
