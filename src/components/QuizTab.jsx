@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { IconCelebrate, IconRetry } from "../icons";
 
 export default function QuizTab({ module, quizPassed, onPass }) {
   const [qIdx, setQIdx] = useState(0);
@@ -50,7 +51,9 @@ export default function QuizTab({ module, quizPassed, onPass }) {
     const passed = score >= 3;
     return (
       <div className="qr-w pop">
-        <div className="qr-em">{passed ? "🎉" : "😤"}</div>
+        <div className="qr-em" style={{ display: "flex", justifyContent: "center", marginBottom: 6 }}>
+          {passed ? <IconCelebrate size={72} /> : <IconRetry size={72} />}
+        </div>
         <div className="qr-title">{passed ? "Nailed it!" : "Not quite…"}</div>
         <div className="qr-sub">
           {passed ? "Quiz passed · +100 XP" : "Need 3/5 to pass. You've got this."}

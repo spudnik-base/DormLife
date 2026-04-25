@@ -1,5 +1,5 @@
 import { MODULES, XP_CHORE } from "../data/modules";
-import { ModuleIcon } from "../icons";
+import { ModuleIcon, IconTrophy } from "../icons";
 
 export default function BadgesView({ getLevel }) {
   const earnedCount = MODULES.filter((m) => getLevel(m.id) === 3).length;
@@ -18,7 +18,9 @@ export default function BadgesView({ getLevel }) {
 
       {allDone && (
         <div className="pro-b">
-          <div style={{ fontSize: 26, marginBottom: 5 }}>🏆</div>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 5 }}>
+            <IconTrophy size={48} />
+          </div>
           <div className="hd" style={{ fontSize: 12, color: "var(--accent)", fontWeight: 900 }}>
             LIFE SKILLS PRO
           </div>
