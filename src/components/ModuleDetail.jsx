@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
-import { ModuleIcon } from "../icons";
+import { ModuleIcon, IconLearn, IconQuiz, IconCheckIn } from "../icons";
 import LearnTab from "./LearnTab.jsx";
 import QuizTab from "./QuizTab.jsx";
 import CheckInTab from "./CheckInTab.jsx";
 
 const TAB_CONFIG = [
-  { id: "learn", label: "📖 Learn" },
-  { id: "quiz", label: "🧠 Quiz" },
-  { id: "checkin", label: "✅ Check-in" },
+  { id: "learn",   label: "Learn",    Icon: IconLearn },
+  { id: "quiz",    label: "Quiz",     Icon: IconQuiz },
+  { id: "checkin", label: "Check-in", Icon: IconCheckIn },
 ];
 
 const XP_TAG_CONFIG = [
-  { label: "📖 Learn", xp: 50, threshold: 1 },
-  { label: "🧠 Quiz", xp: 100, threshold: 2 },
-  { label: "✅ Done", xp: 150, threshold: 3 },
+  { label: "Learn", xp: 50,  threshold: 1, Icon: IconLearn },
+  { label: "Quiz",  xp: 100, threshold: 2, Icon: IconQuiz },
+  { label: "Done",  xp: 150, threshold: 3, Icon: IconCheckIn },
 ];
 
 export default function ModuleDetail({
@@ -51,7 +51,7 @@ export default function ModuleDetail({
         <div className="m-big-sb">{module.sub}</div>
 
         <div className="xp-tags">
-          {XP_TAG_CONFIG.map(({ label, xp, threshold }) => {
+          {XP_TAG_CONFIG.map(({ label, xp, threshold, Icon }) => {
             const reached = level >= threshold;
             return (
               <div
@@ -61,9 +61,13 @@ export default function ModuleDetail({
                   background: reached ? `${module.color}40` : "var(--ink-softer)",
                   border: `1px solid ${reached ? module.color : "var(--ink-soft)"}`,
                   color: reached ? "var(--ink)" : "var(--muted)",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 5,
                 }}
               >
-                {label} +{xp}
+                <Icon size={13} />
+                <span>{label} +{xp}</span>
               </div>
             );
           })}
@@ -71,13 +75,16 @@ export default function ModuleDetail({
       </div>
 
       <div className="tabs">
-        {TAB_CONFIG.map(({ id, label }) => (
+        {TAB_CONFIG.map(({ id, label, Icon }) => (
           <div
             key={id}
             className={`tab-b ${tab === id ? "on" : ""}`}
             onClick={() => setTab(id)}
           >
-            {label}
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+              <Icon size={14} />
+              {label}
+            </span>
           </div>
         ))}
       </div>
