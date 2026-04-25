@@ -20,6 +20,18 @@ export {
   IconBadges,
 };
 
+export {
+  IconLearn,
+  IconQuiz,
+  IconCheckIn,
+  IconClipboard,
+  IconChart,
+  IconCheck,
+  IconTrophy,
+  IconCelebrate,
+  IconRetry,
+} from "./UiIcons.jsx";
+
 export const MODULE_ICONS = {
   dishes: IconDishes,
   laundry: IconLaundry,
