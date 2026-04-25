@@ -1,12 +1,23 @@
 import { useEffect, useState } from "react";
 import { IconCelebrate, IconRetry } from "../icons";
 
+function pickRandom(arr, n) {
+  const copy = [...arr];
+  const take = Math.min(n, copy.length);
+  for (let i = 0; i < take; i++) {
+    const j = i + Math.floor(Math.random() * (copy.length - i));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy.slice(0, take);
+}
+
 export default function QuizTab({ module, quizPassed, onPass }) {
   const [qIdx, setQIdx] = useState(0);
   const [qSel, setQSel] = useState(null);
   const [qFeed, setQFeed] = useState(false);
   const [qAns, setQAns] = useState([]);
   const [qDone, setQDone] = useState(false);
+  const [activeQuiz, setActiveQuiz] = useState(() => pickRandom(module.quiz, 5));
 
   useEffect(() => {
     setQIdx(0);
@@ -14,6 +25,7 @@ export default function QuizTab({ module, quizPassed, onPass }) {
     setQFeed(false);
     setQAns([]);
     setQDone(false);
+    setActiveQuiz(pickRandom(module.quiz, 5));
   }, [module.id]);
 
   const reset = () => {
@@ -22,6 +34,7 @@ export default function QuizTab({ module, quizPassed, onPass }) {
     setQFeed(false);
     setQAns([]);
     setQDone(false);
+    setActiveQuiz(pickRandom(module.quiz, 5));
   };
 
   const pickAnswer = (i) => {
@@ -32,13 +45,13 @@ export default function QuizTab({ module, quizPassed, onPass }) {
     setQAns(nextAns);
 
     setTimeout(() => {
-      if (qIdx < module.quiz.length - 1) {
+      if (qIdx < activeQuiz.length - 1) {
         setQIdx((q) => q + 1);
         setQSel(null);
         setQFeed(false);
       } else {
         setQDone(true);
-        const score = nextAns.filter((a, j) => a === module.quiz[j].a).length;
+        const score = nextAns.filter((a, j) => a === activeQuiz[j].a).length;
         if (score >= 3 && !quizPassed) {
           onPass(score);
         }
@@ -47,7 +60,7 @@ export default function QuizTab({ module, quizPassed, onPass }) {
   };
 
   if (qDone) {
-    const score = qAns.filter((a, i) => a === module.quiz[i].a).length;
+    const score = qAns.filter((a, i) => a === activeQuiz[i].a).length;
     const passed = score >= 3;
     return (
       <div className="qr-w pop">
@@ -69,11 +82,11 @@ export default function QuizTab({ module, quizPassed, onPass }) {
     );
   }
 
-  const q = module.quiz[qIdx];
+  const q = activeQuiz[qIdx];
   return (
     <div className="quiz-w">
       <div className="q-bar">
-        {module.quiz.map((_, i) => (
+        {activeQuiz.map((_, i) => (
           <div key={i} className={`q-pip ${i < qIdx ? "d" : i === qIdx ? "c" : ""}`} />
         ))}
       </div>
