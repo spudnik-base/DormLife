@@ -455,6 +455,15 @@ body {
   word-break: break-word;
 }
 
+.ci-words {
+  text-align: right;
+  margin: 4px 4px 12px;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.3px;
+}
+.ci-words-ok   { color: #4A7A55; }
+.ci-words-need { color: var(--muted); }
+
 /* ── chores list ───────────────────────────────────────────── */
 .ch-list { padding: 0 16px; display: flex; flex-direction: column; gap: 9px; }
 .ch-row {

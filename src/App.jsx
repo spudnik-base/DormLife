@@ -71,9 +71,15 @@ export default function App() {
     if (next) sheetsApi.sync(next);
   };
 
-  const handleMarkDone = (reflection = "") => {
+  const handleMarkDone = (reflection) => {
     if (!activeModule) return;
     const next = progressApi.markChoreDone(activeModule.id, reflection);
+    if (next) sheetsApi.sync(next);
+  };
+
+  const handleUpdateReflection = (reflection) => {
+    if (!activeModule) return;
+    const next = progressApi.updateReflection(activeModule.id, reflection);
     if (next) sheetsApi.sync(next);
   };
 
@@ -121,12 +127,13 @@ export default function App() {
           learned={!!progressApi.progress[activeModule.id]?.learn}
           quizPassed={!!progressApi.progress[activeModule.id]?.quiz}
           choreDone={!!progressApi.progress[activeModule.id]?.chore}
-          savedReflection={progressApi.progress[activeModule.id]?.reflection || ""}
+          savedReflection={progressApi.progress[activeModule.id]?.reflection}
           initialTab={moduleInitialTab}
           onBack={closeModule}
           onMarkLearn={handleMarkLearn}
           onPass={handleQuizPass}
           onMarkDone={handleMarkDone}
+          onUpdateReflection={handleUpdateReflection}
         />
       ) : (
         <>

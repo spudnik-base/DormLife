@@ -9,6 +9,15 @@ function deriveLevel(progress, id) {
   return 0;
 }
 
+function joinReflection(r) {
+  if (!r) return "";
+  if (typeof r === "string") return r;
+  const parts = [];
+  if (r.takeaway) parts.push(`TAKEAWAY: ${r.takeaway}`);
+  if (r.action)   parts.push(`ACTION: ${r.action}`);
+  return parts.join("\n\n");
+}
+
 export function useSheets({ sheetsUrl, studentName, dorm }) {
   const [syncStatus, setSyncStatus] = useState(null);
   const clearTimer = useRef(null);
@@ -36,7 +45,7 @@ export function useSheets({ sheetsUrl, studentName, dorm }) {
       xp,
       ...Object.fromEntries(MODULES.map((m) => [m.id, deriveLevel(progress, m.id)])),
       reflections: Object.fromEntries(
-        MODULES.map((m) => [m.id, progress[m.id]?.reflection || ""])
+        MODULES.map((m) => [m.id, joinReflection(progress[m.id]?.reflection)])
       ),
     };
 

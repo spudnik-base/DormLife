@@ -21,6 +21,15 @@ function persist(state) {
   try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
 }
 
+function cleanReflection(input) {
+  if (input == null) return { takeaway: "", action: "" };
+  if (typeof input === "string") return { takeaway: input.trim(), action: "" };
+  return {
+    takeaway: (input.takeaway || "").trim(),
+    action: (input.action || "").trim(),
+  };
+}
+
 export function useProgress() {
   const [progress, setProgress] = useState({});
   const [xp, setXp] = useState(0);
@@ -70,14 +79,28 @@ export function useProgress() {
     return { progress: nextProgress, xp: nextXp };
   }, [progress, xp, studentName, dorm, sheetsUrl]);
 
-  const markChoreDone = useCallback((id, reflection = "") => {
+  const markChoreDone = useCallback((id, reflection) => {
     if (progress[id]?.chore) return null;
-    const nextProgress = { ...progress, [id]: { ...(progress[id] || {}), chore: true, reflection } };
+    const nextProgress = {
+      ...progress,
+      [id]: { ...(progress[id] || {}), chore: true, reflection: cleanReflection(reflection) },
+    };
     const nextXp = xp + XP_CHORE;
     setProgress(nextProgress);
     setXp(nextXp);
     persist({ progress: nextProgress, xp: nextXp, studentName, dorm, sheetsUrl });
     return { progress: nextProgress, xp: nextXp };
+  }, [progress, xp, studentName, dorm, sheetsUrl]);
+
+  const updateReflection = useCallback((id, reflection) => {
+    if (!progress[id]?.chore) return null;
+    const nextProgress = {
+      ...progress,
+      [id]: { ...(progress[id] || {}), reflection: cleanReflection(reflection) },
+    };
+    setProgress(nextProgress);
+    persist({ progress: nextProgress, xp, studentName, dorm, sheetsUrl });
+    return { progress: nextProgress, xp };
   }, [progress, xp, studentName, dorm, sheetsUrl]);
 
   const setupUser = useCallback((name, dormName, url) => {
@@ -108,7 +131,7 @@ export function useProgress() {
   return {
     progress, xp, studentName, dorm, sheetsUrl, ready,
     getLevel,
-    markLearn, markQuizPassed, markChoreDone,
+    markLearn, markQuizPassed, markChoreDone, updateReflection,
     setupUser, resetUser,
     totalDone, levelNum, xpPct, xpToNext,
   };

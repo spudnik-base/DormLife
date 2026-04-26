@@ -22,12 +22,13 @@ export default function ModuleDetail({
   learned,
   quizPassed,
   choreDone,
-  savedReflection = "",
+  savedReflection,
   initialTab = "learn",
   onBack,
   onMarkLearn,
   onPass,
   onMarkDone,
+  onUpdateReflection,
 }) {
   const [tab, setTab] = useState(initialTab);
 
@@ -103,6 +104,7 @@ export default function ModuleDetail({
             done={choreDone}
             savedReflection={savedReflection}
             onMarkDone={onMarkDone}
+            onUpdateReflection={onUpdateReflection}
           />
         )}
       </div>
