@@ -1,5 +1,8 @@
 import { useCallback, useRef, useState } from "react";
 import { MODULES } from "../data/modules";
+import { CAPSTONE } from "../data/capstone";
+
+const ALL = [...MODULES, CAPSTONE];
 
 function deriveLevel(progress, id) {
   const v = progress[id] || {};
@@ -43,9 +46,9 @@ export function useSheets({ sheetsUrl, studentName, dorm }) {
       student: studentName,
       dorm,
       xp,
-      ...Object.fromEntries(MODULES.map((m) => [m.id, deriveLevel(progress, m.id)])),
+      ...Object.fromEntries(ALL.map((m) => [m.id, deriveLevel(progress, m.id)])),
       reflections: Object.fromEntries(
-        MODULES.map((m) => [m.id, joinReflection(progress[m.id]?.reflection)])
+        ALL.map((m) => [m.id, joinReflection(progress[m.id]?.reflection)])
       ),
     };
 
