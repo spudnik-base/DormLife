@@ -1,5 +1,7 @@
 import { MODULES } from "../data/modules";
+import { CAPSTONE } from "../data/capstone";
 import ModuleCard from "./ModuleCard.jsx";
+import CapstoneCard from "./CapstoneCard.jsx";
 
 export default function HomeView({
   levelNum,
@@ -9,8 +11,11 @@ export default function HomeView({
   totalDone,
   getLevel,
   onOpenModule,
+  onOpenCapstone,
 }) {
   const quizzesPassed = MODULES.filter((m) => getLevel(m.id) >= 2).length;
+  const capstoneUnlocked = totalDone === MODULES.length;
+  const capstoneLevel = getLevel(CAPSTONE.id);
 
   return (
     <>
@@ -54,6 +59,16 @@ export default function HomeView({
             onClick={() => onOpenModule(m)}
           />
         ))}
+      </div>
+
+      <div className="capstone-section">
+        <CapstoneCard
+          unlocked={capstoneUnlocked}
+          level={capstoneLevel}
+          totalDone={totalDone}
+          totalRequired={MODULES.length}
+          onClick={onOpenCapstone}
+        />
       </div>
     </>
   );

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useProgress } from "./hooks/useProgress";
 import { useSheets } from "./hooks/useSheets";
 import { MOCK_STUDENTS } from "./data/mockStudents";
+import { CAPSTONE } from "./data/capstone";
 import {
   BottomNav,
   SyncChip,
@@ -30,6 +31,11 @@ export default function App() {
   const [activeModule, setActiveModule] = useState(null);
   const [moduleInitialTab, setModuleInitialTab] = useState("learn");
   const [pinged, setPinged] = useState({});
+
+  const openCapstone = () => {
+    setActiveModule(CAPSTONE);
+    setModuleInitialTab("quiz");
+  };
 
   if (!progressApi.ready) return null;
 
@@ -155,6 +161,7 @@ export default function App() {
                     totalDone={progressApi.totalDone}
                     getLevel={progressApi.getLevel}
                     onOpenModule={(m) => openModule(m, "learn")}
+                    onOpenCapstone={openCapstone}
                   />
                 )}
                 {tab === "badges" && (

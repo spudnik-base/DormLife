@@ -1,9 +1,12 @@
 import { MODULES, XP_CHORE } from "../data/modules";
+import { CAPSTONE } from "../data/capstone";
 import { ModuleIcon, IconTrophy } from "../icons";
 
+const ALL_BADGES = [...MODULES, CAPSTONE];
+
 export default function BadgesView({ getLevel }) {
-  const earnedCount = MODULES.filter((m) => getLevel(m.id) === 3).length;
-  const allDone = earnedCount === MODULES.length;
+  const earnedCount = ALL_BADGES.filter((m) => getLevel(m.id) === 3).length;
+  const allDone = earnedCount === ALL_BADGES.length;
 
   return (
     <>
@@ -12,7 +15,7 @@ export default function BadgesView({ getLevel }) {
           Micro-Credentials
         </div>
         <div style={{ fontSize: 12, color: "var(--muted)" }}>
-          {earnedCount}/{MODULES.length} badges earned
+          {earnedCount}/{ALL_BADGES.length} badges earned
         </div>
       </div>
 
@@ -31,7 +34,7 @@ export default function BadgesView({ getLevel }) {
       )}
 
       <div className="bg-w">
-        {MODULES.map((m) => {
+        {ALL_BADGES.map((m) => {
           const lv = getLevel(m.id);
           const earned = lv === 3;
           return (
