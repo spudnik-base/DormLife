@@ -1,8 +1,7 @@
-import { IconHome, IconChores, IconBadges } from "../icons";
+import { IconHome, IconBadges } from "../icons";
 
 const TABS = [
   { id: "home",    Icon: IconHome,    label: "Home" },
-  { id: "chores",  Icon: IconChores,  label: "Chores" },
   { id: "badges",  Icon: IconBadges,  label: "Badges" },
 ];
 

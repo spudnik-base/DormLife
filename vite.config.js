@@ -13,9 +13,9 @@ export default defineConfig({
         "icons/source-any.svg",
       ],
       manifest: {
-        name: "dormlife.",
+        name: "dormlife. — Dorm life skills",
         short_name: "dormlife",
-        description: "Dorm life skills tracker",
+        description: "Dorm life skills training",
         theme_color: "#FFFBF4",
         background_color: "#FFFBF4",
         display: "standalone",

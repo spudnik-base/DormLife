@@ -12,7 +12,7 @@ const LEVEL_BG = [
 
 const LEVEL_DOT = ["", "var(--accent)", "#5778B0", "#5A9E68"];
 const LEVEL_DOT_TEXT = ["", "#FFFFFF", "#FFFFFF", "#FFFFFF"];
-const LEVEL_LETTER = ["", "L", "Q", "✓"];
+const LEVEL_LETTER = ["", "R", "Q", "★"];
 
 export default function TeacherView({ students, pinged, onPing }) {
   const [filterDorm, setFilterDorm] = useState("");
@@ -46,11 +46,11 @@ export default function TeacherView({ students, pinged, onPing }) {
         </div>
         <div className="ra-sc">
           <div className="ra-sn" style={{ color: "#4A7A55" }}>{totalTasks}</div>
-          <div className="ra-sl">Tasks Done</div>
+          <div className="ra-sl">Modules Complete</div>
         </div>
         <div className="ra-sc">
           <div className="ra-sn" style={{ color: "#8F4453" }}>{needNudge}</div>
-          <div className="ra-sl">Need Nudge</div>
+          <div className="ra-sl">Not Started</div>
         </div>
       </div>
 
@@ -125,7 +125,7 @@ export default function TeacherView({ students, pinged, onPing }) {
           </div>
         )}
       </div>
-      <div className="ra-leg">L = Learned · Q = Quiz passed · ✓ = Chore done</div>
+      <div className="ra-leg">R = Read · Q = Quiz passed · ★ = Reflected</div>
     </>
   );
 }

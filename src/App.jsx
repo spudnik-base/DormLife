@@ -6,7 +6,6 @@ import {
   BottomNav,
   SyncChip,
   HomeView,
-  ChoresView,
   BadgesView,
   ModuleDetail,
   SetupScreen,
@@ -149,12 +148,6 @@ export default function App() {
                     totalDone={progressApi.totalDone}
                     getLevel={progressApi.getLevel}
                     onOpenModule={(m) => openModule(m, "learn")}
-                  />
-                )}
-                {tab === "chores" && (
-                  <ChoresView
-                    getLevel={progressApi.getLevel}
-                    onOpenCheckIn={(m) => openModule(m, "checkin")}
                   />
                 )}
                 {tab === "badges" && (

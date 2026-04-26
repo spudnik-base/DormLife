@@ -5,7 +5,6 @@ export { default as LearnTab } from "./LearnTab.jsx";
 export { default as QuizTab } from "./QuizTab.jsx";
 export { default as CheckInTab } from "./CheckInTab.jsx";
 export { default as HomeView } from "./HomeView.jsx";
-export { default as ChoresView } from "./ChoresView.jsx";
 export { default as BadgesView } from "./BadgesView.jsx";
 export { default as ModuleDetail } from "./ModuleDetail.jsx";
 export { default as SetupScreen } from "./SetupScreen.jsx";

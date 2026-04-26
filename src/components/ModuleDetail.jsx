@@ -5,15 +5,15 @@ import QuizTab from "./QuizTab.jsx";
 import CheckInTab from "./CheckInTab.jsx";
 
 const TAB_CONFIG = [
-  { id: "learn",   label: "Learn",    Icon: IconLearn },
-  { id: "quiz",    label: "Quiz",     Icon: IconQuiz },
-  { id: "checkin", label: "Check-in", Icon: IconCheckIn },
+  { id: "learn",   label: "Read",    Icon: IconLearn },
+  { id: "quiz",    label: "Quiz",    Icon: IconQuiz },
+  { id: "checkin", label: "Reflect", Icon: IconCheckIn },
 ];
 
 const XP_TAG_CONFIG = [
-  { label: "Learn", xp: 50,  threshold: 1, Icon: IconLearn },
-  { label: "Quiz",  xp: 100, threshold: 2, Icon: IconQuiz },
-  { label: "Done",  xp: 150, threshold: 3, Icon: IconCheckIn },
+  { label: "Read",    xp: 50,  threshold: 1, Icon: IconLearn },
+  { label: "Quiz",    xp: 100, threshold: 2, Icon: IconQuiz },
+  { label: "Reflect", xp: 150, threshold: 3, Icon: IconCheckIn },
 ];
 
 export default function ModuleDetail({

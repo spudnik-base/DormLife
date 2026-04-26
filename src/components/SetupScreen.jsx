@@ -18,7 +18,7 @@ export default function SetupScreen({ initialSheetsUrl = "", onSubmit }) {
     <form className="setup-w" onSubmit={handleSubmit}>
       <div className="setup-hero">
         <h1>dormlife<span>.</span></h1>
-        <p>Let's get you set up — takes 10 seconds.</p>
+        <p>Dorm life skills — let's get you set up.</p>
       </div>
 
       <div className="setup-field">
