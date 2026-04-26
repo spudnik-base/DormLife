@@ -4,6 +4,7 @@ import IconGarbage from "./IconGarbage.jsx";
 import IconOrganisation from "./IconOrganisation.jsx";
 import IconKitchen from "./IconKitchen.jsx";
 import IconCommunity from "./IconCommunity.jsx";
+import IconCapstone from "./IconCapstone.jsx";
 import IconHome from "./IconHome.jsx";
 import IconChores from "./IconChores.jsx";
 import IconBadges from "./IconBadges.jsx";
@@ -15,6 +16,7 @@ export {
   IconOrganisation,
   IconKitchen,
   IconCommunity,
+  IconCapstone,
   IconHome,
   IconChores,
   IconBadges,
@@ -39,6 +41,7 @@ export const MODULE_ICONS = {
   organisation: IconOrganisation,
   kitchen: IconKitchen,
   community: IconCommunity,
+  capstone: IconCapstone,
 };
 
 export function ModuleIcon({ id, size, color, stroke, accent }) {

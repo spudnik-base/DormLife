@@ -22,12 +22,13 @@ function persist(state) {
 }
 
 function cleanReflection(input) {
-  if (input == null) return { takeaway: "", action: "" };
-  if (typeof input === "string") return { takeaway: input.trim(), action: "" };
-  return {
-    takeaway: (input.takeaway || "").trim(),
-    action: (input.action || "").trim(),
-  };
+  if (input == null) return {};
+  if (typeof input === "string") return { takeaway: input.trim() };
+  const out = {};
+  Object.entries(input).forEach(([k, v]) => {
+    out[k] = ((v == null ? "" : String(v))).trim();
+  });
+  return out;
 }
 
 export function useProgress() {

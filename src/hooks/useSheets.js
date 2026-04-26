@@ -12,10 +12,10 @@ function deriveLevel(progress, id) {
 function joinReflection(r) {
   if (!r) return "";
   if (typeof r === "string") return r;
-  const parts = [];
-  if (r.takeaway) parts.push(`TAKEAWAY: ${r.takeaway}`);
-  if (r.action)   parts.push(`ACTION: ${r.action}`);
-  return parts.join("\n\n");
+  return Object.entries(r)
+    .filter(([, v]) => v && String(v).trim())
+    .map(([k, v]) => `${k.toUpperCase()}: ${String(v).trim()}`)
+    .join("\n\n");
 }
 
 export function useSheets({ sheetsUrl, studentName, dorm }) {

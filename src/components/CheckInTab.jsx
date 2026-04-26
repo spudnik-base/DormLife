@@ -3,14 +3,27 @@ import { IconChart, IconCelebrate, IconCheck } from "../icons";
 
 const MIN_WORDS = 10;
 
+const PLACEHOLDERS = {
+  takeaway:     "A sentence or two on what you're taking away…",
+  action:       "Be specific — what will you actually do?",
+  contribution: "List your skills, talents, hobbies, character traits…",
+  commitment:   "How will you show up for this dorm?",
+};
+
 function countWords(s) {
   return (s || "").trim().match(/\S+/g)?.length || 0;
 }
 
-function normaliseSaved(saved) {
-  if (!saved) return { takeaway: "", action: "" };
-  if (typeof saved === "string") return { takeaway: saved, action: "" };
-  return { takeaway: saved.takeaway || "", action: saved.action || "" };
+function normaliseSaved(saved, keys) {
+  const out = {};
+  keys.forEach((k) => { out[k] = ""; });
+  if (!saved) return out;
+  if (typeof saved === "string") {
+    out[keys[0]] = saved;
+    return out;
+  }
+  keys.forEach((k) => { out[k] = saved[k] || ""; });
+  return out;
 }
 
 export default function CheckInTab({
@@ -22,43 +35,43 @@ export default function CheckInTab({
 }) {
   const [flash, setFlash] = useState(false);
   const [flashKind, setFlashKind] = useState("save");
-  const [takeaway, setTakeaway] = useState("");
-  const [action, setAction] = useState("");
+  const [answers, setAnswers] = useState({});
 
-  // Hydrate fields from saved reflection on module change
+  const reflectEntries = useMemo(
+    () => Object.entries(module.reflect || {}),
+    [module.id]
+  );
+  const keys = useMemo(() => reflectEntries.map(([k]) => k), [reflectEntries]);
+
   useEffect(() => {
     setFlash(false);
-    const initial = normaliseSaved(savedReflection);
-    setTakeaway(initial.takeaway);
-    setAction(initial.action);
-  }, [module.id, savedReflection]);
-
-  const reflect = module.reflect || {
-    takeaway: "What's one thing you're taking away from this?",
-    action: "",
-  };
+    setAnswers(normaliseSaved(savedReflection, keys));
+  }, [module.id, savedReflection, keys]);
 
   const totalWords = useMemo(
-    () => countWords(takeaway) + countWords(action),
-    [takeaway, action]
+    () => Object.values(answers).reduce((sum, v) => sum + countWords(v), 0),
+    [answers]
   );
   const canSubmit = totalWords >= MIN_WORDS;
   const wordsLeft = Math.max(0, MIN_WORDS - totalWords);
 
-  // Track edits relative to saved (only matters when done)
   const isDirty = useMemo(() => {
-    const s = normaliseSaved(savedReflection);
-    return s.takeaway !== takeaway || s.action !== action;
-  }, [savedReflection, takeaway, action]);
+    const saved = normaliseSaved(savedReflection, keys);
+    return keys.some((k) => (answers[k] || "") !== (saved[k] || ""));
+  }, [answers, savedReflection, keys]);
+
+  const setAnswer = (key, value) => {
+    setAnswers((prev) => ({ ...prev, [key]: value }));
+  };
 
   const handleClick = () => {
     if (!canSubmit) return;
     if (done) {
       if (!isDirty) return;
-      onUpdateReflection?.({ takeaway, action });
+      onUpdateReflection?.(answers);
       setFlashKind("update");
     } else {
-      onMarkDone({ takeaway, action });
+      onMarkDone(answers);
       setFlashKind("save");
     }
     setFlash(true);
@@ -73,33 +86,19 @@ export default function CheckInTab({
 
   return (
     <div className="ci-w">
-      {reflect.takeaway && (
-        <div className="ci-reflect">
-          <label className="ci-reflect-label">{reflect.takeaway}</label>
+      {reflectEntries.map(([key, prompt]) => (
+        <div className="ci-reflect" key={key}>
+          <label className="ci-reflect-label">{prompt}</label>
           <textarea
             className="ci-reflect-input"
-            value={takeaway}
-            onChange={(e) => setTakeaway(e.target.value)}
-            placeholder="A few words on what you're taking away…"
-            maxLength={400}
+            value={answers[key] || ""}
+            onChange={(e) => setAnswer(key, e.target.value)}
+            placeholder={PLACEHOLDERS[key] || "Write a sentence or two…"}
+            maxLength={500}
             rows={3}
           />
         </div>
-      )}
-
-      {reflect.action && (
-        <div className="ci-reflect">
-          <label className="ci-reflect-label">{reflect.action}</label>
-          <textarea
-            className="ci-reflect-input"
-            value={action}
-            onChange={(e) => setAction(e.target.value)}
-            placeholder="Be specific — what will you actually do?"
-            maxLength={400}
-            rows={3}
-          />
-        </div>
-      )}
+      ))}
 
       <div className="ci-words">
         {canSubmit ? (
